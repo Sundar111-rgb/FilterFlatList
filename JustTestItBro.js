@@ -5,7 +5,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckBox from '@react-native-community/checkbox';
 
-export default class Washing extends Component {
+export default class JustTestItBro extends Component 
+{
 
     constructor() {
         super()
@@ -16,7 +17,7 @@ export default class Washing extends Component {
             toggle: false,
             togglee: false,
             costprice:true,
-            quantitylist:[0],
+            quantitylist:[],
             data: [],
 
             lists:[],
@@ -71,7 +72,7 @@ export default class Washing extends Component {
         this.setState({isChecked : initialCheck})
         this.setState({quantitylist:initialquantity})
       //  console.log('--------------------->>>>>>>',this.state.quantity);
-           this.ApiFetch();
+           this.ApiFetch()
           // this.state.quantitylist[0] = 2;
        }
 
