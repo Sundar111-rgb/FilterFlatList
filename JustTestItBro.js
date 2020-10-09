@@ -5,10 +5,10 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckBox from '@react-native-community/checkbox';
 
+
 export default class JustTestItBro extends Component 
 {
-
-    constructor() {
+        constructor() {
         super()
 
         this.state = {
@@ -26,39 +26,45 @@ export default class JustTestItBro extends Component
             selectedLists:[],
             isChecked : false,
             quantity:0,
+            partationdata:'',
+            qtydata:'',
          }
     }
     
 
     onUpdateItem1 = i => {
         this.setState(state => {
-          const quantitylist = state.quantitylist.map((item, j) => {
-            if (j === i) {
-              return item + 1;
-            } else {
-              return item;
-            }
-          });
-           return {
-            quantitylist,
-          };
-        });
+         const quantitylist = state.quantitylist.map((i,j) => {
+          if (j === i) {
+            return i + 1;
+          } else {
+            return i;
+          }
+      
+         });
+          return {
+           quantitylist,
+         };
+       });
+    
       };
      
     
       onUpdateItem2 = i => {
         this.setState(state => {
-          const quantitylist = state.quantitylist.map((item, j) => {
+          const quantitylist = state.quantitylist.map((i, j) => {
             if (j === i) {
-              return item - 1;
+              return i - 1;
             } else {
-              return item;
+              return i;
             }
+             //return i - 1;
           });
            return {
             quantitylist,
           };
         });
+       // alert(this.state.quantitylist[i]-1)
       };
     
 
@@ -67,13 +73,14 @@ export default class JustTestItBro extends Component
        componentDidMount() {
 
         let initialCheck = this.state.lists.map(() => false);
-        let initialquantity = this.state.quantitylist.map(() => 0);
-     //  console.log('---------------------.......>>>>>>>',initialquantity);
+      //  let initialquantity = this.state.quantitylist.map(() => 0);
+    //   console.log('---------------------.......>>>>>>>',initialquantity);
         this.setState({isChecked : initialCheck})
-        this.setState({quantitylist:initialquantity})
+      //  this.setState({quantitylist:initialquantity})
       //  console.log('--------------------->>>>>>>',this.state.quantity);
            this.ApiFetch()
           // this.state.quantitylist[0] = 2;
+         // alert(this.state.quantitylist)
        }
 
      
@@ -81,7 +88,7 @@ export default class JustTestItBro extends Component
        console.log('--------------------',item.title,'------------------',item.id)
         let  isChecked = this.state.isChecked
         let selectedLists = this.state.selectedLists
-        let quantitylist = this.state.quantitylist
+      //  let quantitylist = this.state.quantitylist
         isChecked[item.id] = !isChecked[item.id];
         this.setState({ isChecked : isChecked});
 
@@ -94,12 +101,36 @@ export default class JustTestItBro extends Component
             //this.setState({cost:this.state.cost-item.price})
         }
 
-       // alert(quantitylist)
+        alert(selectedLists)
        }
     
+       ApiFetch1 = () => {
 
+        let quantity = this.state.quantitylist
+        var formdata = new FormData()
+        formdata.append('service_id',this.state.service_id)
+
+    var requestOptions = {
+        method: 'POST',
+        body: formdata,
+        redirect: 'follow'
+      };
+  
+ fetch("http://webmobril.org/dev/goodwash/api/Mobileapi/getservicedetail", requestOptions)
+    .then(response => response.json())
+    .then((response) => {    
+      console.log("inspection response=-=+++++=->>",response) 
+
+      this.setState({data:response.result})
+      for(var i=0;i<response.result.length;i++) {
+            console.log(response.result.data[i])
+      }
+    })
+    .catch(error => console.log('error', error));
+      }
     
     ApiFetch = () => {
+      let quantity = this.state.quantitylist
             var formdata = new FormData()
             formdata.append('service_id',this.state.service_id)
 
@@ -115,7 +146,30 @@ export default class JustTestItBro extends Component
           console.log("inspection response=-=+++++=->>",response) 
     
           this.setState({data:response.result})
-          
+
+          for(var i=0;i<this.state.data.length;i++) {
+            // console.log('--------------',response.result[i].data.length)
+            var ddd = response.result[i].data.length
+            }
+          // console.log(response.result[this.state.data.length].data.length)
+          console.log(ddd)
+     
+          for(var i=0;i<ddd;i++) {
+           quantity.push(0)
+          }
+          this.setState({quantitylist:quantity})
+     
+          console.log(this.state.quantitylist)
+         // this.setState({quantitylist:response.result})
+        //  var arr1=[];
+        //  var arr2 =[];
+        //   for(var i=0;i<response.result.length;i++){
+        //     arr2.push(response.result[i].data.length)
+        //     for(var j=0;j<response.result[i].data.length;j++){
+        //       arr1.push({id:response.result[i].data.id,qty:'0'})
+        //    }
+        //   }
+        //   this.setState({partationdata:arr2,qtydata:arr1})
         })
         .catch(error => console.log('error', error));
           }
@@ -135,7 +189,7 @@ export default class JustTestItBro extends Component
 
        onUpdateItem = i => {
         this.setState(state => {
-          const list = state.list.map((item, j) => {
+          const list = state.lists.map((item, j) => {
             if (j === i) {
               return item + 1;
             } else {
@@ -158,19 +212,23 @@ export default class JustTestItBro extends Component
      }
 
     adddd = (item) => {
-        let  quantitylist = this.state.quantitylist[0]
-     // this.setState({quantitylist: quantitylist+1})
-      //  totalprice = item.price * this.state.quantity
-      //  this.setState({ cost: totalprice })
-        alert(this.state.quantitylist[0])
+       //  let  quantitylist = this.state.quantitylist[0]
+       //  this.setState({quantitylist: quantitylist+1})
+       //  totalprice = item.price * this.state.quantity
+       //  this.setState({ cost: totalprice })
+       //  alert(this.state.quantitylist[0])
+    //   this.state.quantitylist.push(1)
+    //   this.state.quantitylist.push(2)
+    //   this.state.quantitylist.push(3)
+     //  console.log(this.state.quantitylist)
     }
 
     acccc = (item) => {
-        let totalprice
-        if (this.state.quantity > 0)
-        this.setState({quantity: this.state.quantity-1})
-        totalprice = item.price * this.state.quantity
-        this.setState({ cost: totalprice })
+        // let totalprice
+        // if (this.state.quantity > 0)
+        // this.setState({quantity: this.state.quantity-1})
+        // totalprice = item.price * this.state.quantity
+        // this.setState({ cost: totalprice })
     }
 
     renderItem = (item,index) => {
@@ -181,7 +239,7 @@ export default class JustTestItBro extends Component
             <View style={{ width: wp('20%'), paddingTop: 3 }}><Text style={{ alignSelf: 'center', color: '#000', fontWeight: 'bold' }}>Quantity</Text></View>
             <View style={{ width: wp('20%'), paddingTop: 3 }}><Text style={{ alignSelf: 'center', color: '#000', fontWeight: 'bold' }}>Price</Text></View>
             </View>
-                   <FlatList
+                      <FlatList
                         data={item.data}
                         keyExtractor={item => item.id}
                         renderItem={({ item,index }) =>  this.renderItemChild(item, index)} 
@@ -211,17 +269,17 @@ export default class JustTestItBro extends Component
                 backgroundColor: 'light'
             }}>
                 <View style={{flexDirection:'row',marginTop:hp('0.5%')}}>
-                <TouchableOpacity onPress={() => this.acccc(item)}>
+                <TouchableOpacity onPress={() => this.onUpdateItem2(item.id)}>
                     <View style={{ width: wp('6%'), height: hp('3%'), alignItems: 'center',borderLeftRadius:15, borderWidth: 1,borderRightWidth:0, borderColor: '#000', }}>
                         <Icons name="minus" size={17} />
                     </View>
                 </TouchableOpacity>
 
                 <View style={{ width: wp('6%'), height: hp('3%'), alignItems: 'center', borderBottomWidth: 1, borderTopWidth: 1, borderColor: '#000', }}>
-                    <Text style={{ paddingBottom: hp('0%'), fontSize: 15 }}>{this.state.quantitylist[2]}</Text>
+          <Text style={{ paddingBottom: hp('0%'), fontSize: 15 }}>{this.state.quantitylist[item.id]}</Text>
                 </View>
 
-                <TouchableOpacity onPress={() => this.adddd(item)}>
+                <TouchableOpacity onPress={() => this.onUpdateItem1(item.id)}>
                     <View style={{ width: wp('6%'), height: hp('3%'), alignItems: 'center',borderRightRadius:15, borderWidth: 1,borderLeftWidth:0, borderColor: '#000', }}>
                         <Icons name="plus" size={17} />
                     </View>
