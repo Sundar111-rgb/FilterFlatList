@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 
-const Action = {
+const Action =  {
   ADD: "Add",
   SUB: "Sub",
   MUL: "Mul",
